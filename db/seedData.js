@@ -1,15 +1,66 @@
 // require in the database adapter functions as you write them (createUser, createActivity...)
 // const { } = require('./');
 const client = require("./client")
+const { createUser } = require("./users")
 
 async function dropTables() {
-  console.log("Dropping All Tables...")
-  // drop all tables, in the correct order
+  try {
+    console.log("Dropping All Tables...");
+
+    await client.query(`
+    DROP TABLE IF EXISTS users cascade;
+    DROP TABLE IF EXISTS routines;
+    DROP TABLE IF EXISTS activities;
+    DROP TABLE IF EXISTS routine_activities;
+  `);
+
+    console.log("Finished dropping tables!");
+  } catch (error) {
+    console.log("Error dropping tables!");
+    throw error;
+  }
 }
 
 async function createTables() {
-  console.log("Starting to build tables...")
-  // create all tables, in the correct order
+  try {
+    console.log("Starting to build tables...")
+
+    await client.query(`
+    CREATE TABLE users (
+      id SERIAL PRIMARY KEY,
+      username varchar(255) UNIQUE NOT NULL,
+      password varchar(255) NOT NULL
+    );
+
+    CREATE TABLE routines (
+      id SERIAL PRIMARY KEY,
+      name varchar(255) UNIQUE NOT NULL,
+      "creatorId" INTEGER REFERENCES users(id), 
+      "isPublic" BOOLEAN DEFAULT false,
+      goal TEXT NOT NULL
+    );
+
+    CREATE TABLE activities (
+      id SERIAL PRIMARY KEY,
+      name varchar(255) NOT NULL,
+      description varchar(255) NOT NULL
+    );
+
+    CREATE TABLE routine_activities (
+      id SERIAL PRIMARY KEY,
+      "routineId" INTEGER REFERENCES routines(id),
+      "activityId" INTEGER REFERENCES activities(id),
+      duration INTEGER NOT NULL,
+      count INTEGER NOT NULL
+    );
+
+  `)
+
+    console.log("Finished building tables!");
+  } catch (error) {
+    console.error("Error building tables!");
+    throw error;
+  }
 }
 
 /* 
