@@ -9,7 +9,7 @@ async function createUser({ username, password }) {
       INSERT INTO users(username, password) 
       VALUES($1, $2) 
       ON CONFLICT (username) DO NOTHING 
-      RETURNING *;
+      RETURNING id, username;
     `, [username, password]);
 
     return user;
@@ -20,6 +20,27 @@ async function createUser({ username, password }) {
 }
 
 async function getUser({ username, password }) {
+  
+    if(!username || !password){
+      return;
+    }
+    try{
+      const user = await getUserByUsername(username);
+      if(!user){
+        return
+      }
+      if(password === user.password){
+        delete user.password;
+        return user;
+
+      } 
+      return;
+      
+      
+    } catch (error) {
+      console.error('get user error')
+      throw error;
+    }
 
 }
 
@@ -33,7 +54,7 @@ async function getUserById(userId) {
       if (!user) {
         return null
       }
-
+      delete user.password;
       return user;
     } catch (error) {
       console.error('failed to find user by id');
@@ -48,13 +69,14 @@ async function getUserById(userId) {
 async function getUserByUsername(userName) {
   try {
     const { rows : [user]} = await client.query(`
-    SELECT id, username, password
+    SELECT *
     FROM users
-    WHERE username=${userName}`);
+    WHERE username=$1`, [userName]);
 
-    if (!user) {
-      return null
+    if(!user){
+      return null;
     }
+    
 
     return user;
   } catch (error) {
