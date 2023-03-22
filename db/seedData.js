@@ -9,9 +9,9 @@ async function dropTables() {
 
     await client.query(`
     DROP TABLE IF EXISTS users cascade;
-    DROP TABLE IF EXISTS routines;
-    DROP TABLE IF EXISTS activities;
-    DROP TABLE IF EXISTS routine_activities;
+    DROP TABLE IF EXISTS routines cascade;
+    DROP TABLE IF EXISTS activities cascade;
+    DROP TABLE IF EXISTS routine_activities cascade;
   `);
 
     console.log("Finished dropping tables!");
