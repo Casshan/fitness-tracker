@@ -46,7 +46,22 @@ async function getUserById(userId) {
 }
 
 async function getUserByUsername(userName) {
+  try {
+    const { rows : [user]} = await client.query(`
+    SELECT id, username, password
+    FROM users
+    WHERE username=${userName}`);
 
+    if (!user) {
+      return null
+    }
+
+    return user;
+  } catch (error) {
+    console.error('failed to find user by name');
+    throw error;
+    
+  }
 }
 
 module.exports = {
