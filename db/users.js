@@ -24,6 +24,24 @@ async function getUser({ username, password }) {
 }
 
 async function getUserById(userId) {
+    try {
+      const { rows : [user]} = await client.query(`
+      SELECT id, username, password
+      FROM users
+      WHERE id=${userId}`);
+
+      if (!user) {
+        return null
+      }
+
+      return user;
+    } catch (error) {
+      console.error('failed to find user by id');
+      throw error;
+      
+    }
+
+    
 
 }
 
