@@ -115,6 +115,10 @@ async function getAllPublicRoutines() {
 async function getAllRoutinesByUser({ username }) {
   try {
 
+    if(!username){
+      return;
+    }
+
     const { rows: routinesbyuser } = await client.query(`
       SELECT  routines.*, 
               users.username as "creatorName", 
@@ -142,6 +146,10 @@ async function getAllRoutinesByUser({ username }) {
 async function getPublicRoutinesByUser({ username }) {
   try {
 
+    if(!username){
+      return;
+    }
+
     const { rows: publicroutinesbyuser } = await client.query(`
       SELECT  routines.*, 
               users.username as "creatorName", 
@@ -155,7 +163,7 @@ async function getPublicRoutinesByUser({ username }) {
       WHERE users.username = $1 AND routines."isPublic" = true;
     `, [username]);
     
-    console.log(publicroutinesbyuser);
+    // console.log(publicroutinesbyuser);
     return publicroutinesbyuser;
 
   } catch (error) {
@@ -168,6 +176,10 @@ async function getPublicRoutinesByUser({ username }) {
 
 async function getPublicRoutinesByActivity({ id }) { 
   try {
+
+    if(!id){
+      return;
+    }
 
     const { rows: publicroutinesbyactivity } = await client.query(`
       SELECT  routines.*, 
@@ -182,7 +194,7 @@ async function getPublicRoutinesByActivity({ id }) {
       WHERE routines_activities."activityId" = $1 AND routines."isPublic" = true;
     `, [id]);
     
-    console.log(publicroutinesbyactivity);
+    // console.log(publicroutinesbyactivity);
     return publicroutinesbyactivity;
 
   } catch (error) {

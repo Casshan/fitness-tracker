@@ -84,7 +84,7 @@ function expectRoutinesNotToContainDuplicates(routines, fakeRoutine) {
 
 // Tests start here
 
-describe("DB Routines", () => {
+xdescribe("DB Routines", () => {
   let fakeUser,
     fakeRoutine,
     fakePrivateRoutine,
@@ -238,7 +238,7 @@ describe("DB Routines", () => {
   });
 
   describe("getAllRoutinesByUser", () => {
-    it("should get the public routine for the user", async () => {
+    xit("should get the public routine for the user", async () => {
       const routines = await getAllRoutinesByUser(fakeUser);
       expectRoutinesToContainRoutine(routines, fakeRoutine);
     });

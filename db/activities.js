@@ -21,10 +21,12 @@ async function getAllActivities() {
   // select and return an array of all activities
   try {
     const { rows: [ activities ] } = await client.query(`
-        SELECT * FROM activities;
+
+        SELECT activities.* 
+        FROM activities;
 
     `)
-
+    console.log(activities);
     return activities;
 
   } catch (error){
@@ -35,9 +37,47 @@ async function getAllActivities() {
   
 }
 
-async function getActivityById(id) { }
+async function getActivityById(id) {
+  try{
 
-async function getActivityByName(name) { }
+    if(!id){
+      return null;
+    }
+
+    const { rows: activitybyid } = (`
+          
+          SELECT activities.*
+          FROM activities
+          WHERE activities.id = $1
+
+          `, [id]);
+    // console.log(activitybyid);
+    return activitybyid;
+
+  } catch (error) {
+    console.error('get activity by id error');
+    throw error;
+  }
+ }
+
+async function getActivityByName(name) { 
+
+  try {
+    
+    if(!name){
+      return null;
+    }
+
+    const { rows: activitybyname} = (`
+      SELECT activities.* 
+      FROM activities
+      WHERE activities.name = $1
+      `, [name]);
+  } catch(error){
+    console.error('get activity by name error');
+    throw error;
+  }
+}
 
 // used as a helper inside db/routines.js
 async function attachActivitiesToRoutines(routines) { }
