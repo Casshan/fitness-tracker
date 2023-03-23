@@ -117,7 +117,7 @@ describe("DB Routines", () => {
      and write the addActivityToRoutine function.****/
 
   describe("createRoutine", () => {
-    xit("Creates and returns the new routine", async () => {
+    it("Creates and returns the new routine", async () => {
       const user = await createFakeUser();
       const routine = await createRoutine({
         creatorId: user.id,
@@ -238,7 +238,7 @@ describe("DB Routines", () => {
   });
 
   describe("getAllRoutinesByUser", () => {
-    xit("should get the public routine for the user", async () => {
+    it("should get the public routine for the user", async () => {
       const routines = await getAllRoutinesByUser(fakeUser);
       expectRoutinesToContainRoutine(routines, fakeRoutine);
     });
