@@ -8,73 +8,59 @@ async function createActivity({ name, description }) {
       INSERT INTO activities(name, description)
       VALUES($1, $2) 
       RETURNING *; 
-      `, [ name, description ]);
+      `, [name, description]);
 
-      return activity; 
-  } catch (error){ 
-      console.error("Failed to create activity!");
-      throw error;
+    return activity;
+  } catch (error) {
+    console.error("Failed to create activity!");
+    throw error;
   }
 }
 
 async function getAllActivities() {
   // select and return an array of all activities
   try {
-    const { rows: activities  } = await client.query(`
-
-        SELECT *
-        FROM activities;
-
+    const { rows: activities } = await client.query(`
+        SELECT * FROM activities;
     `);
-    console.log('activites grabbed by getAllActivities function:')
-    console.log(activities);
     return activities;
-
-  } catch (error){
+  } catch (error) {
     console.error('getAllActivities error');
     throw error;
-
   }
-  
 }
 
 async function getActivityById(id) {
-  try{
 
-    if(!id){
+  try {
+    if (!id) {
       return null;
-    }
-
-    const { rows: activitybyid } = (`
-          
-          SELECT activities.*
-          FROM activities
-          WHERE activities.id = $1
-
+    };
+    const { rows: [activityById] } = await client.query(`    
+          SELECT * FROM activities WHERE id = $1;
           `, [id]);
-    // console.log(activitybyid);
-    return activitybyid;
+
+    return activityById;
 
   } catch (error) {
     console.error('get activity by id error');
     throw error;
   }
- }
+}
 
-async function getActivityByName(name) { 
+async function getActivityByName(name) {
 
   try {
-    
-    if(!name){
+    if (!name) {
       return null;
     }
-
-    const { rows: activitybyname} = (`
-      SELECT activities.* 
-      FROM activities
-      WHERE activities.name = $1
+    const { rows: [activityByName] } = await client.query(`
+      SELECT activities.* FROM activities WHERE activities.name = $1
       `, [name]);
-  } catch(error){
+
+    return activityByName;
+
+  } catch (error) {
     console.error('get activity by name error');
     throw error;
   }
@@ -84,18 +70,15 @@ async function getActivityByName(name) {
 async function attachActivitiesToRoutines(routines) {
   //join activity row to routines
   try {
-    const { rows: [activitiesToRoutines] } = (`
-
-      SELECT activites.*, routine_activities.*
-      FROM activities
+    const { rows: [activitiesToRoutines] } = await client.query(`
+      SELECT activites.*, routine_activities.* FROM activities
       JOIN activities ON routine_activities."activityId" = activities`);
 
-      console.log ('activitiesToRoutines');
-      return activitiesToRoutines;
+    return activitiesToRoutines;
 
-  } catch(error){
-      console.error('attachActivitiesToRoutines error');
-      throw error;
+  } catch (error) {
+    console.error('attachActivitiesToRoutines error');
+    throw error;
   }
 }
 
@@ -103,6 +86,28 @@ async function updateActivity({ id, ...fields }) {
   // don't try to update the id
   // do update the name and description
   // return the updated activity
+  try {
+
+    if (!fields.description) {
+      const { rows: [updatedActivityName] } = await client.query(`
+        UPDATE activities SET name = $2 WHERE id = $1 RETURNING *;
+      `, [id, fields.name])
+
+      return updatedActivityName;
+
+    }
+    if (!fields.name) {
+      const { rows: [updatedActivityDescription] } = await client.query(`
+        UPDATE activities SET description = $2 WHERE id = $1 RETURNING *;
+    `, [id, fields.description])
+
+      return updatedActivityDescription;
+
+    }
+  } catch (error) {
+    console.error('update routine error');
+    throw error;
+  }
 }
 
 module.exports = {
