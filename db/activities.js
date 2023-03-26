@@ -20,12 +20,13 @@ async function createActivity({ name, description }) {
 async function getAllActivities() {
   // select and return an array of all activities
   try {
-    const { rows: [ activities ] } = await client.query(`
+    const { rows: activities  } = await client.query(`
 
-        SELECT activities.* 
+        SELECT *
         FROM activities;
 
-    `)
+    `);
+    console.log('activites grabbed by getAllActivities function:')
     console.log(activities);
     return activities;
 
@@ -80,7 +81,23 @@ async function getActivityByName(name) {
 }
 
 // used as a helper inside db/routines.js
-async function attachActivitiesToRoutines(routines) { }
+async function attachActivitiesToRoutines(routines) {
+  //join activity row to routines
+  try {
+    const { rows: [activitiesToRoutines] } = (`
+
+      SELECT activites.*, routine_activities.*
+      FROM activities
+      JOIN activities ON routine_activities."activityId" = activities`);
+
+      console.log ('activitiesToRoutines');
+      return activitiesToRoutines;
+
+  } catch(error){
+      console.error('attachActivitiesToRoutines error');
+      throw error;
+  }
+}
 
 async function updateActivity({ id, ...fields }) {
   // don't try to update the id

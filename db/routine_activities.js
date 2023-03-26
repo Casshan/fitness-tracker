@@ -19,11 +19,52 @@ async function addActivityToRoutine({
   }
 }
 
-async function getRoutineActivityById(id) {}
+async function getRoutineActivityById(id) {
+  try {
 
-async function getRoutineActivitiesByRoutine({ id }) {}
+    if(!id){
+      return null;
+    }
 
-async function updateRoutineActivity({ id, ...fields }) {}
+    const { rows: routineactivity } = (`
+      SELECT routine_activities.*
+      FROM routine_activities
+      WHERE routine_activities.id = $1;
+      `, [id]);
+  } catch(error){
+    console.error('get routine activity by id error');
+    throw error;
+  }
+}
+
+async function getRoutineActivitiesByRoutine({ id }) {
+    try {
+      if (!id) {
+        return null;
+      }
+      const { rows: routineactivity } = (`
+        SELECT routine_activities.*
+        FROM routine_activities
+        WHERE routine_activities."routineId"=$1;
+        `, [id]);
+    } catch(error) {
+      console.error ('get routineactivity by routine');
+      throw error;
+    }
+}
+
+async function updateRoutineActivity({ id, ...fields }) {
+  try{
+    const { rows: activity } = (`
+      UPDATE activities
+      SET activities.* = $2
+      WHERE activities.id = $1
+    `, [id, ...fields])
+  } catch(error){
+    console.error('update routine activity error');
+    throw error;
+  }
+}
 
 async function destroyRoutineActivity(id) {}
 

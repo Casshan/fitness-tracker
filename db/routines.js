@@ -5,9 +5,9 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
   try {
 
     const { rows: [routine] } = await client.query(`
-    INSERT INTO routines("creatorId", "isPublic", name, goal)
-    VALUES($1, $2, $3, $4)
-    RETURNING *;
+      INSERT INTO routines("creatorId", "isPublic", name, goal)
+      VALUES($1, $2, $3, $4)
+      RETURNING *;
     `, [creatorId, isPublic, name, goal]);
 
     return routine;
@@ -46,7 +46,7 @@ async function getRoutinesWithoutActivities() {
   try {
 
     const { rows } = await client.query(`
-      SELECT * FROM routines;
+      SELECT routines.* FROM routines;
     `);
     return rows;
   } catch (error) {
@@ -101,7 +101,7 @@ async function getAllPublicRoutines() {
         WHERE routines."isPublic"=true;
       `);
 
-    console.log(publicroutines)
+    // console.log(publicroutines)
     return publicroutines;
 
   } catch (error) {
@@ -205,8 +205,26 @@ async function getPublicRoutinesByActivity({ id }) {
   }
 }
 
-async function updateRoutine({ id, ...fields }) { }
+async function updateRoutine({ id, ...fields }) {
+  console.log(fields.isPublic) 
+  try {
+    const { rows: routine } = (`
+    UPDATE routines
+    SET routines."isPublic" = $2."isPublic"
+    SET routines.name = $2.name
+    SET routines.goal = $2.goal
+    WHERE routines.id = $1;
+    
+    `, [id, fields])
 
+    return routine;
+    
+  } catch (error) {
+    console.error('update routine error');
+    throw error;
+
+  }
+ }
 async function destroyRoutine(id) { }
 
 module.exports = {

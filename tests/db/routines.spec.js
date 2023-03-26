@@ -84,7 +84,7 @@ function expectRoutinesNotToContainDuplicates(routines, fakeRoutine) {
 
 // Tests start here
 
-xdescribe("DB Routines", () => {
+describe("DB Routines", () => {
   let fakeUser,
     fakeRoutine,
     fakePrivateRoutine,
@@ -117,7 +117,7 @@ xdescribe("DB Routines", () => {
      and write the addActivityToRoutine function.****/
 
   describe("createRoutine", () => {
-    it("Creates and returns the new routine", async () => {
+    xit("Creates and returns the new routine", async () => {
       const user = await createFakeUser();
       const routine = await createRoutine({
         creatorId: user.id,
@@ -138,12 +138,12 @@ xdescribe("DB Routines", () => {
   });
 
   describe("getAllRoutines", () => {
-    xit("should include the public routine", async () => {
+    it("should include the public routine", async () => {
       const routines = await getAllRoutines();
       expectRoutinesToContainRoutine(routines, fakeRoutine);
     });
 
-    xit("Should include the private routine", async () => {
+    it("Should include the private routine", async () => {
       const routines = await getAllRoutines();
       expectRoutinesToContainRoutine(routines, fakePrivateRoutine);
     });
@@ -160,7 +160,7 @@ xdescribe("DB Routines", () => {
       expectRoutinesNotToContainDuplicates(routines, fakeRoutine);
     });
 
-    xit("includes username, from users join, aliased as creatorName", async () => {
+    it("includes username, from users join, aliased as creatorName", async () => {
       const routines = await getAllRoutines();
       const routine = routines.find((routine) => routine.id === fakeRoutine.id);
       expect(routine.creatorName).toEqual(fakeUser.username);
@@ -408,7 +408,7 @@ xdescribe("DB Routines", () => {
   });
 
   describe("updateRoutine", () => {
-    xit("Returns the updated routine", async () => {
+    it("Returns the updated routine", async () => {
       const fakeRoutine = await createFakePublicRoutine();
 
       const updatedRoutine = await updateRoutine({
