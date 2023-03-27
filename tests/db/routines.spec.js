@@ -439,7 +439,7 @@ describe("DB Routines", () => {
       expect(updatedRoutine.goal).toBe(goal);
     });
 
-    xit("Does not update fields that are not passed in", async () => {
+    it("Does not update fields that are not passed in", async () => {
       const fakeRoutine = await createFakePublicRoutine();
       const name = faker.random.uuid();
       const updatedRoutine = await updateRoutine({

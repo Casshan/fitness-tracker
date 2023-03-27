@@ -182,7 +182,9 @@ async function updateRoutine({ id, ...fields }) {
   try {
     
     const { rows: [ routine ] } = await client.query (`
-      UPDATE routines SET "isPublic" = $2, name = $3, goal = $4
+      UPDATE routines 
+      SET "isPublic" = coalesce($2, routines."isPublic"), 
+      name = coalesce($3, routines.name), goal = coalesce($4, routines.goal)
       WHERE id = $1 RETURNING *;
     `, [id, fields.isPublic, fields.name, fields.goal])
     
