@@ -35,7 +35,7 @@ async function getActivityById(id) {
   try {
     if (!id) {
       return null;
-    };
+    }
     const { rows: [activityById] } = await client.query(`    
           SELECT * FROM activities WHERE id = $1;
           `, [id]);
