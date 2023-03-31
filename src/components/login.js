@@ -1,6 +1,9 @@
 import React from "react";
 
 const Login = () => {
+
+
+
     return (
         <div class="container" id="loginform">
             <br />
@@ -12,12 +15,8 @@ const Login = () => {
                 <div class="form-floating">
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password"></input>
                     <label for="floatingPassword">Password</label>
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1"></input>
-                    <label class="form-check-label" for="exampleCheck1">Remember me?</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                </div><br/>
+                <button type="Login" class="btn btn-primary">Submit</button>
             </form>
         </div>
     )
